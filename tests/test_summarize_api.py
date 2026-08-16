@@ -283,3 +283,11 @@ def test_summarize_handles_llm_errors(
     assert response.json() == {
         "detail": expected_detail
     }
+
+def test_openapi_documents_rate_limit_response() -> None:
+    openapi = client.get("/openapi.json").json()
+    responses = openapi["paths"]["/api/v1/summarize"]["post"]["responses"]
+
+    assert "429" in responses
+    assert responses["429"]["description"] == "Too many summarization requests."
+    assert "Retry-After" in responses["429"]["headers"]

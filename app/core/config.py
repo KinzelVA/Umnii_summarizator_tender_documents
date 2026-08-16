@@ -11,6 +11,9 @@ class Settings(BaseSettings):
         "API for extracting structured information from tender documentation."
     )
     max_pdf_size_mb: int = Field(default=20, gt=0, le=100)
+    log_level: str = "INFO"
+    rate_limit_requests: int = Field(default=10, gt=0, le=1000)
+    rate_limit_window_seconds: int = Field(default=60, gt=0, le=3600)
 
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "gpt-oss:20b"

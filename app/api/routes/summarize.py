@@ -71,6 +71,25 @@ ALLOWED_PDF_CONTENT_TYPES = {
                 }
             },
         },
+        status.HTTP_429_TOO_MANY_REQUESTS: {
+            "description": "Too many summarization requests.",
+            "headers": {
+                "Retry-After": {
+                    "description": "Seconds to wait before retrying.",
+                    "schema": {"type": "string"},
+                }
+            },
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": (
+                            "Too many summarization requests. "
+                            "Please retry later."
+                        )
+                    }
+                }
+            },
+        },
         status.HTTP_502_BAD_GATEWAY: {
             "description": "The LLM provider returned an invalid response.",
         },
