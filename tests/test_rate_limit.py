@@ -48,10 +48,7 @@ def test_rate_limiter_returns_429_after_limit_is_exceeded() -> None:
 
     assert response.status_code == 429
     assert response.json() == {
-        "detail": (
-            "Too many summarization requests. "
-            "Please retry later."
-        )
+        "detail": ("Too many summarization requests. Please retry later.")
     }
 
 

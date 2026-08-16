@@ -18,15 +18,9 @@ client = TestClient(app)
 
 
 def _build_pdf_with_text(text: str) -> bytes:
-    escaped_text = (
-        text.replace("\\", "\\\\")
-        .replace("(", "\\(")
-        .replace(")", "\\)")
-    )
+    escaped_text = text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
 
-    content = (
-        f"BT /F1 12 Tf 72 720 Td ({escaped_text}) Tj ET"
-    ).encode("latin-1")
+    content = (f"BT /F1 12 Tf 72 720 Td ({escaped_text}) Tj ET").encode("latin-1")
 
     objects = [
         b"<< /Type /Catalog /Pages 2 0 R >>",
@@ -38,10 +32,7 @@ def _build_pdf_with_text(text: str) -> bytes:
             b"/Contents 5 0 R >>"
         ),
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-        (
-            b"<< /Length %d >>\nstream\n%s\nendstream"
-            % (len(content), content)
-        ),
+        (b"<< /Length %d >>\nstream\n%s\nendstream" % (len(content), content)),
     ]
 
     pdf = bytearray(b"%PDF-1.4\n")
@@ -161,9 +152,7 @@ def test_summarize_rejects_non_pdf_file() -> None:
     )
 
     assert response.status_code == 415
-    assert response.json() == {
-        "detail": "Only PDF files are supported."
-    }
+    assert response.json() == {"detail": "Only PDF files are supported."}
 
 
 def test_summarize_rejects_oversized_pdf(
@@ -280,9 +269,8 @@ def test_summarize_handles_llm_errors(
     )
 
     assert response.status_code == expected_status
-    assert response.json() == {
-        "detail": expected_detail
-    }
+    assert response.json() == {"detail": expected_detail}
+
 
 def test_openapi_documents_rate_limit_response() -> None:
     openapi = client.get("/openapi.json").json()

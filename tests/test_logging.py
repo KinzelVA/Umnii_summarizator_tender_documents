@@ -7,7 +7,6 @@ from fastapi.testclient import TestClient
 from app.core.logging import JsonFormatter
 from app.main import app
 
-
 client = TestClient(app)
 
 
@@ -54,8 +53,7 @@ def test_request_logging_middleware_logs_completed_request(
     records = [
         record
         for record in caplog.records
-        if record.name == "app.request"
-        and record.getMessage() == "Request completed"
+        if record.name == "app.request" and record.getMessage() == "Request completed"
     ]
 
     assert records

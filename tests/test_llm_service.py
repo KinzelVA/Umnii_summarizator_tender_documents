@@ -1,8 +1,9 @@
 import asyncio
 import json
 from types import SimpleNamespace
-from httpx import TimeoutException
+
 import pytest
+from httpx import TimeoutException
 
 from app.services.llm import (
     LlmConnectionError,
@@ -51,9 +52,7 @@ class FakeLlmClient:
 
 
 def test_build_analysis_prompt_contains_document() -> None:
-    prompt = build_analysis_prompt(
-        "Contract amount: 1 000 000 RUB"
-    )
+    prompt = build_analysis_prompt("Contract amount: 1 000 000 RUB")
 
     assert "<document>" in prompt
     assert "Contract amount: 1 000 000 RUB" in prompt
@@ -89,12 +88,8 @@ def test_summarize_tender_returns_validated_summary() -> None:
 
     assert summary.contract_amount == "1 000 000 RUB"
     assert summary.execution_deadlines == "30 days"
-    assert summary.contractor_requirements == [
-        "Valid license"
-    ]
-    assert summary.penalties == [
-        "0.1% per day of delay"
-    ]
+    assert summary.contractor_requirements == ["Valid license"]
+    assert summary.penalties == ["0.1% per day of delay"]
 
     assert client.last_request is not None
     assert client.last_request["model"] == "gpt-oss:20b"
@@ -142,9 +137,7 @@ def test_summarize_tender_rejects_empty_llm_response() -> None:
 
 
 def test_summarize_tender_rejects_invalid_json() -> None:
-    client = FakeLlmClient(
-        response_content="This is not valid JSON"
-    )
+    client = FakeLlmClient(response_content="This is not valid JSON")
 
     with pytest.raises(
         LlmInvalidResponseError,
@@ -163,9 +156,7 @@ def test_summarize_tender_rejects_invalid_json() -> None:
 
 
 def test_summarize_tender_handles_connection_error() -> None:
-    client = FakeLlmClient(
-        error=ConnectionError("Connection refused")
-    )
+    client = FakeLlmClient(error=ConnectionError("Connection refused"))
 
     with pytest.raises(
         LlmConnectionError,
@@ -182,10 +173,9 @@ def test_summarize_tender_handles_connection_error() -> None:
             )
         )
 
+
 def test_summarize_tender_handles_timeout() -> None:
-    client = FakeLlmClient(
-        error=TimeoutException("Request timed out")
-    )
+    client = FakeLlmClient(error=TimeoutException("Request timed out"))
 
     with pytest.raises(
         LlmTimeoutError,

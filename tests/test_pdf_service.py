@@ -13,15 +13,9 @@ from app.services.pdf import (
 
 
 def _build_pdf_with_text(text: str) -> bytes:
-    escaped_text = (
-        text.replace("\\", "\\\\")
-        .replace("(", "\\(")
-        .replace(")", "\\)")
-    )
+    escaped_text = text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
 
-    content = (
-        f"BT /F1 12 Tf 72 720 Td ({escaped_text}) Tj ET"
-    ).encode("latin-1")
+    content = (f"BT /F1 12 Tf 72 720 Td ({escaped_text}) Tj ET").encode("latin-1")
 
     objects = [
         b"<< /Type /Catalog /Pages 2 0 R >>",
@@ -33,10 +27,7 @@ def _build_pdf_with_text(text: str) -> bytes:
             b"/Contents 5 0 R >>"
         ),
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-        (
-            b"<< /Length %d >>\nstream\n%s\nendstream"
-            % (len(content), content)
-        ),
+        (b"<< /Length %d >>\nstream\n%s\nendstream" % (len(content), content)),
     ]
 
     pdf = bytearray(b"%PDF-1.4\n")
@@ -132,6 +123,7 @@ def test_extract_pdf_rejects_pdf_without_text_layer() -> None:
             max_size_bytes=1024 * 1024,
         )
 
+
 def test_extract_pdf_rejects_empty_file() -> None:
     with pytest.raises(
         InvalidPdfError,
@@ -172,4 +164,3 @@ def test_extract_pdf_rejects_encrypted_pdf() -> None:
             BytesIO(buffer.getvalue()),
             max_size_bytes=1024 * 1024,
         )
-

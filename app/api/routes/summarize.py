@@ -4,7 +4,6 @@ from typing import Annotated
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from starlette.concurrency import run_in_threadpool
 
-
 from app.core.config import get_settings
 from app.schemas.summary import TenderSummary
 from app.services.llm import (
@@ -67,9 +66,7 @@ ALLOWED_PDF_CONTENT_TYPES = {
             "description": "The uploaded file is not a PDF.",
             "content": {
                 "application/json": {
-                    "example": {
-                        "detail": "Only PDF files are supported."
-                    }
+                    "example": {"detail": "Only PDF files are supported."}
                 }
             },
         },
@@ -85,8 +82,7 @@ ALLOWED_PDF_CONTENT_TYPES = {
                 "application/json": {
                     "example": {
                         "detail": (
-                            "Too many summarization requests. "
-                            "Please retry later."
+                            "Too many summarization requests. Please retry later."
                         )
                     }
                 }
