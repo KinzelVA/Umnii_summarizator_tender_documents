@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,6 +10,7 @@ class Settings(BaseSettings):
     app_description: str = (
         "API for extracting structured information from tender documentation."
     )
+    max_pdf_size_mb: int = Field(default=20, gt=0, le=100)
 
     model_config = SettingsConfigDict(
         env_prefix="TENDER_",
@@ -16,6 +18,10 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
+
+    @property
+    def max_pdf_size_bytes(self) -> int:
+        return self.max_pdf_size_mb * 1024 * 1024
 
 
 @lru_cache
