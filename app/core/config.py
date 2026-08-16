@@ -14,6 +14,11 @@ class Settings(BaseSettings):
 
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "gpt-oss:20b"
+    ollama_context_length: int = Field(
+        default=16384,
+        ge=4096,
+        le=65536,
+    )
     llm_timeout_seconds: int = Field(default=120, gt=0, le=600)
 
     model_config = SettingsConfigDict(

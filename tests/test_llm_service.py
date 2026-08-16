@@ -29,12 +29,14 @@ class FakeLlmClient:
         model: str,
         messages: list[dict[str, str]],
         format: dict,
-        options: dict[str, float],
+        think: str,
+        options: dict[str, int | float],
     ) -> object:
         self.last_request = {
             "model": model,
             "messages": messages,
             "format": format,
+            "think": think,
             "options": options,
         }
 
@@ -79,6 +81,7 @@ def test_summarize_tender_returns_validated_summary() -> None:
             "Tender document text",
             base_url="http://localhost:11434",
             model="gpt-oss:20b",
+            context_length=16384,
             timeout_seconds=120,
             client=client,
         )
@@ -95,8 +98,10 @@ def test_summarize_tender_returns_validated_summary() -> None:
 
     assert client.last_request is not None
     assert client.last_request["model"] == "gpt-oss:20b"
+    assert client.last_request["think"] == "low"
     assert client.last_request["options"] == {
-        "temperature": 0
+        "temperature": 0,
+        "num_ctx": 16384,
     }
 
 
@@ -110,6 +115,7 @@ def test_summarize_tender_rejects_empty_text() -> None:
                 "   ",
                 base_url="http://localhost:11434",
                 model="gpt-oss:20b",
+                context_length=16384,
                 timeout_seconds=120,
                 client=FakeLlmClient(),
             )
@@ -128,6 +134,7 @@ def test_summarize_tender_rejects_empty_llm_response() -> None:
                 "Tender document text",
                 base_url="http://localhost:11434",
                 model="gpt-oss:20b",
+                context_length=16384,
                 timeout_seconds=120,
                 client=client,
             )
@@ -148,6 +155,7 @@ def test_summarize_tender_rejects_invalid_json() -> None:
                 "Tender document text",
                 base_url="http://localhost:11434",
                 model="gpt-oss:20b",
+                context_length=16384,
                 timeout_seconds=120,
                 client=client,
             )
@@ -168,6 +176,7 @@ def test_summarize_tender_handles_connection_error() -> None:
                 "Tender document text",
                 base_url="http://localhost:11434",
                 model="gpt-oss:20b",
+                context_length=16384,
                 timeout_seconds=120,
                 client=client,
             )
@@ -187,6 +196,7 @@ def test_summarize_tender_handles_timeout() -> None:
                 "Tender document text",
                 base_url="http://localhost:11434",
                 model="gpt-oss:20b",
+                context_length=16384,
                 timeout_seconds=120,
                 client=client,
             )

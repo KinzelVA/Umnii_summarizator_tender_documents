@@ -29,7 +29,8 @@ class LlmClient(Protocol):
         model: str,
         messages: list[dict[str, str]],
         format: dict,
-        options: dict[str, float],
+        think: str,
+        options: dict[str, int | float],
     ) -> object:
         """Send a chat request to the LLM provider."""
 
@@ -78,6 +79,7 @@ async def summarize_tender(
     *,
     base_url: str,
     model: str,
+    context_length: int,
     timeout_seconds: int,
     client: LlmClient | None = None,
 ) -> TenderSummary:
@@ -106,7 +108,11 @@ async def summarize_tender(
                 },
             ],
             format=TenderSummary.model_json_schema(),
-            options={"temperature": 0},
+            think="low",
+            options={
+                "temperature": 0,
+                "num_ctx": context_length,
+            },
         )
 
         content = getattr(

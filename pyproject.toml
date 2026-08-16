@@ -13,6 +13,7 @@ dependencies = [
     "pydantic-settings",
     "pypdf>=6,<7",
     "ollama",
+    "python-multipart",
 ]
 
 [project.optional-dependencies]
