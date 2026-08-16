@@ -39,14 +39,9 @@ def _get_stream_size(stream: BinaryIO) -> int:
 
 
 def normalize_text(text: str) -> str:
-    normalized_lines = (
-        " ".join(line.split())
-        for line in text.splitlines()
-    )
+    normalized_lines = (" ".join(line.split()) for line in text.splitlines())
 
-    return "\n".join(
-        line for line in normalized_lines if line
-    ).strip()
+    return "\n".join(line for line in normalized_lines if line).strip()
 
 
 def extract_pdf(

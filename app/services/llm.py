@@ -1,5 +1,6 @@
 import json
 from typing import Protocol
+
 from httpx import TimeoutException
 from ollama import AsyncClient, ResponseError
 from pydantic import ValidationError
@@ -13,6 +14,7 @@ class LlmProcessingError(RuntimeError):
 
 class LlmConnectionError(LlmProcessingError):
     """Raised when the LLM provider cannot be reached."""
+
 
 class LlmTimeoutError(LlmProcessingError):
     """Raised when the LLM provider does not respond in time."""
@@ -122,32 +124,23 @@ async def summarize_tender(
         )
 
         if not content:
-            raise LlmInvalidResponseError(
-                "The LLM returned an empty response."
-            )
+            raise LlmInvalidResponseError("The LLM returned an empty response.")
 
         try:
             return TenderSummary.model_validate_json(content)
         except ValidationError as exc:
             raise LlmInvalidResponseError(
-                "The LLM returned a response that does not match "
-                "the expected schema."
+                "The LLM returned a response that does not match the expected schema."
             ) from exc
 
     except LlmInvalidResponseError:
         raise
     except TimeoutException as exc:
-        raise LlmTimeoutError(
-            "The LLM provider request timed out."
-        ) from exc
+        raise LlmTimeoutError("The LLM provider request timed out.") from exc
     except ConnectionError as exc:
-        raise LlmConnectionError(
-            "Could not connect to the LLM provider."
-        ) from exc
+        raise LlmConnectionError("Could not connect to the LLM provider.") from exc
     except ResponseError as exc:
-        raise LlmProcessingError(
-            "The LLM provider returned an error."
-        ) from exc
+        raise LlmProcessingError("The LLM provider returned an error.") from exc
     finally:
         if owns_client and isinstance(client, AsyncClient):
             await client.close()

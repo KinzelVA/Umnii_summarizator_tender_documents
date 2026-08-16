@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
 from app.schemas.summary import TenderSummary
@@ -65,9 +66,7 @@ ALLOWED_PDF_CONTENT_TYPES = {
             "description": "The uploaded file is not a PDF.",
             "content": {
                 "application/json": {
-                    "example": {
-                        "detail": "Only PDF files are supported."
-                    }
+                    "example": {"detail": "Only PDF files are supported."}
                 }
             },
         },
@@ -83,8 +82,7 @@ ALLOWED_PDF_CONTENT_TYPES = {
                 "application/json": {
                     "example": {
                         "detail": (
-                            "Too many summarization requests. "
-                            "Please retry later."
+                            "Too many summarization requests. Please retry later."
                         )
                     }
                 }
@@ -125,7 +123,8 @@ async def summarize_document(
     settings = get_settings()
 
     try:
-        extracted_pdf = extract_pdf(
+        extracted_pdf = await run_in_threadpool(
+            extract_pdf,
             file.file,
             max_size_bytes=settings.max_pdf_size_bytes,
         )

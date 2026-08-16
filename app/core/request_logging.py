@@ -4,7 +4,6 @@ from time import perf_counter
 
 from fastapi import Request, Response
 
-
 logger = logging.getLogger("app.request")
 
 RequestHandler = Callable[[Request], Awaitable[Response]]

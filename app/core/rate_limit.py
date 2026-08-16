@@ -7,7 +7,6 @@ from time import monotonic
 from fastapi import Request, Response, status
 from fastapi.responses import JSONResponse
 
-
 RequestHandler = Callable[[Request], Awaitable[Response]]
 
 
@@ -39,17 +38,10 @@ class InMemoryRateLimiter:
         request: Request,
         call_next: RequestHandler,
     ) -> Response:
-        if (
-            request.method != self.method
-            or request.url.path != self.path
-        ):
+        if request.method != self.method or request.url.path != self.path:
             return await call_next(request)
 
-        client_host = (
-            request.client.host
-            if request.client is not None
-            else "unknown"
-        )
+        client_host = request.client.host if request.client is not None else "unknown"
 
         now = monotonic()
         cutoff = now - self.window_seconds
@@ -66,18 +58,14 @@ class InMemoryRateLimiter:
             if len(timestamps) >= self.max_requests:
                 retry_after = max(
                     1,
-                    ceil(
-                        self.window_seconds
-                        - (now - timestamps[0])
-                    ),
+                    ceil(self.window_seconds - (now - timestamps[0])),
                 )
 
                 return JSONResponse(
                     status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                     content={
                         "detail": (
-                            "Too many summarization requests. "
-                            "Please retry later."
+                            "Too many summarization requests. Please retry later."
                         )
                     },
                     headers={
