@@ -12,6 +12,7 @@ dependencies = [
     "uvicorn[standard]",
     "pydantic-settings",
     "pypdf>=6,<7",
+    "ollama",
 ]
 
 [project.optional-dependencies]

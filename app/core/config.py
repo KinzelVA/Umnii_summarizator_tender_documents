@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     )
     max_pdf_size_mb: int = Field(default=20, gt=0, le=100)
 
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "gpt-oss:20b"
+    llm_timeout_seconds: int = Field(default=120, gt=0, le=600)
+
     model_config = SettingsConfigDict(
         env_prefix="TENDER_",
         env_file=".env",
