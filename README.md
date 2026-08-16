@@ -229,6 +229,7 @@ Health endpoint:
     TENDER_MAX_PDF_SIZE_MB=20
 
     TENDER_OLLAMA_BASE_URL=http://localhost:11434
+    TENDER_DOCKER_OLLAMA_BASE_URL=http://host.docker.internal:11434
     TENDER_OLLAMA_MODEL=gpt-oss:20b
     TENDER_OLLAMA_CONTEXT_LENGTH=16384
     TENDER_LLM_TIMEOUT_SECONDS=120
@@ -357,9 +358,17 @@ HTTP-запросы логируются в JSON-формате.
 
     docker compose down
 
-В `compose.yaml` Ollama на Windows-хосте доступна контейнеру через:
+По умолчанию `compose.yaml` подключается к Ollama на Windows-хосте через:
 
     http://host.docker.internal:11434
+
+Адрес можно переопределить переменной окружения:
+
+    TENDER_DOCKER_OLLAMA_BASE_URL
+
+Например:
+
+    TENDER_DOCKER_OLLAMA_BASE_URL=http://192.168.1.10:11434
 
 Для Linux-host окружения способ доступа контейнера к Ollama может потребовать дополнительной настройки Docker networking.
 
@@ -401,7 +410,9 @@ Job `Tests`:
 
 1. устанавливает Python 3.12;
 2. устанавливает проект и dev-зависимости;
-3. запускает pytest.
+3. запускает `ruff check .`;
+4. проверяет форматирование через `ruff format --check .`;
+5. запускает pytest.
 
 После него выполняется `Docker smoke test`:
 

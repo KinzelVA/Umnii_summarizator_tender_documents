@@ -187,6 +187,7 @@ HTTP-запросы записываются в структурированно
 - `TENDER_LOG_LEVEL`;
 - `TENDER_MAX_PDF_SIZE_MB`;
 - `TENDER_OLLAMA_BASE_URL`;
+- `TENDER_DOCKER_OLLAMA_BASE_URL`;
 - `TENDER_OLLAMA_MODEL`;
 - `TENDER_OLLAMA_CONTEXT_LENGTH`;
 - `TENDER_LLM_TIMEOUT_SECONDS`;
@@ -210,6 +211,10 @@ Docker Compose предоставляет API на порту `8000` и соде
 Если Ollama работает на Windows-хосте через Docker Desktop, контейнер обращается к ней по адресу:
 
 `http://host.docker.internal:11434`
+
+Compose использует отдельную переменную `TENDER_DOCKER_OLLAMA_BASE_URL`, чтобы настройка Docker-сети не конфликтовала с `TENDER_OLLAMA_BASE_URL=http://localhost:11434`, используемой при локальном запуске Python.
+
+Остальные основные настройки Compose могут быть переопределены переменными окружения и имеют безопасные значения по умолчанию.
 
 Локально была проверена полная цепочка:
 
@@ -255,7 +260,9 @@ Tests:
 1. checkout репозитория;
 2. установка Python 3.12;
 3. установка проекта с dev-зависимостями;
-4. запуск `pytest`.
+4. `ruff check .`;
+5. `ruff format --check .`;
+6. `pytest`.
 
 Docker smoke test:
 
