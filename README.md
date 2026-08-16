@@ -1,5 +1,7 @@
 # Умный суммаризатор тендерной документации
 
+[![CI](https://github.com/KinzelVA/Umnii_summarizator_tender_documents/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/KinzelVA/Umnii_summarizator_tender_documents/actions/workflows/ci.yml)
+
 FastAPI-сервис для автоматического извлечения ключевой информации из PDF-документов государственных закупок с помощью локальной LLM через Ollama.
 
 Сервис принимает PDF и возвращает структурированную выжимку:
